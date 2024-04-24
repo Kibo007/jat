@@ -1,3 +1,6 @@
+import DeployButton from "../components/DeployButton";
+import AuthButton from "../components/AuthButton";
+
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 
@@ -17,8 +20,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={GeistSans.className}>
+    <html lang="en" className={`${GeistSans.className} dark`}>
       <body className="bg-background text-foreground">
+        <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
+          <div className="w-full max-w-4xl flex justify-between items-center p-3 text-sm">
+            <DeployButton />
+            <AuthButton />
+          </div>
+        </nav>
+
         <main className="min-h-screen flex flex-col items-center">
           {children}
         </main>
