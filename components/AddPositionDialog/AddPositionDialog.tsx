@@ -34,12 +34,16 @@ import { schema } from "./formSchema";
 import { onSubmitAction } from "../../actions/addPostion";
 import { Textarea } from "../ui/textarea";
 import { SubmitButton } from "./SubmitButton";
+import { useToast } from "../ui/use-toast";
 
 export function AddPositionDialog() {
   const [open, setOpen] = useState(false);
   const [state, formAction] = useFormState(onSubmitAction, {
     message: "",
   });
+
+  const { toast } = useToast();
+
   const form = useForm<z.output<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -57,8 +61,11 @@ export function AddPositionDialog() {
   useEffect(() => {
     if (state?.message === "success") {
       setOpen(false);
+      toast({
+        title: `Position successfuly added`,
+      });
     }
-  }, [state?.message]);
+  }, [state?.message, toast]);
 
   const formRef = useRef<HTMLFormElement>(null);
 

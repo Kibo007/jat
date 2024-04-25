@@ -48,6 +48,7 @@ import { ArrowUpDown, MinusIcon, MoreHorizontal } from "lucide-react";
 import { AddPositionDialog } from "./AddPositionDialog/AddPositionDialog";
 import Link from "next/link";
 import { onDeleteAction } from "@/actions/deletePosition";
+import { useToast } from "./ui/use-toast";
 
 export const columns: ColumnDef<Position>[] = [
   {
@@ -194,6 +195,8 @@ export function DataTable<TData, TValue>({
   const [isPending, startTransition] = React.useTransition();
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
+  const { toast } = useToast();
+
   const table = useReactTable({
     data,
     columns,
@@ -227,6 +230,9 @@ export function DataTable<TData, TValue>({
 
       if (response.message === "success") {
         setRowSelection({});
+        toast({
+          title: `Position${rowIds.length > 1 ? "s" : ""} successfuly deleted`,
+        });
       }
     });
   };
