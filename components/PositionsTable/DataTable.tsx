@@ -15,7 +15,6 @@ import {
 } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -25,150 +24,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { parseISO, format } from "date-fns";
-import { ArrowUpDown, MinusIcon } from "lucide-react";
-import { AddPositionDialog } from "./AddPositionDialog/AddPositionDialog";
-import Link from "next/link";
+import { MinusIcon } from "lucide-react";
+import { AddPositionDialog } from "../AddPositionDialog/AddPositionDialog";
 import { onDeleteAction } from "@/actions/deletePosition";
-import { useToast } from "./ui/use-toast";
-import { PositionStatus } from "@/types/common";
-import { onUpdateStatus } from "@/actions/updatePosition";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select";
-import { POSITION_STATUS } from "@/utils/supabase/constants";
-
-export const columns: ColumnDef<Position>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "createdAt",
-    header: "Datum",
-    cell: ({ row }) => {
-      const createdAt = parseFloat(row.getValue("createdAt"));
-      const date = parseISO(createdAt.toString());
-      return (
-        <time className="text-right font-medium" dateTime={date.toString()}>
-          {format(date, "LLLL d, yyyy")}
-        </time>
-      );
-    },
-  },
-  {
-    accessorKey: "company",
-    header: "Company",
-  },
-  {
-    accessorKey: "jobTitle",
-    header: "Job Title",
-  },
-  {
-    accessorKey: "contact",
-    header: "Contact",
-  },
-  {
-    accessorKey: "location",
-    header: "Location",
-  },
-  {
-    accessorKey: "description",
-    header: "Description",
-  },
-  {
-    accessorKey: "positionUrl",
-    header: "Position url",
-    cell: ({ row }) => {
-      const link = row.getValue("positionUrl");
-      return (
-        <Link href={row.getValue("positionUrl")} target="_blank">
-          link
-        </Link>
-      );
-    },
-  },
-  {
-    accessorKey: "hourlyRate",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Hourly rate
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("hourlyRate"));
-
-      const formatted = new Intl.NumberFormat("de-DE", {
-        style: "currency",
-        currency: "EUR",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
-    },
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const position = row.original;
-
-      return (
-        <div>
-          <Select
-            defaultValue={position.status}
-            onValueChange={(status) => {
-              onUpdateStatus(position.id, status as PositionStatus);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select postion status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {POSITION_STATUS.map((status) => {
-                  return (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-      );
-    },
-  },
-];
+import { useToast } from "../ui/use-toast";
+import { Position } from "@/types/common";
+import { useRouter } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -183,7 +44,7 @@ export function DataTable<TData, TValue>({
   const [filterValue, setFilterValue] = React.useState<string>("");
   const [isPending, startTransition] = React.useTransition();
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-
+  const router = useRouter();
   const { toast } = useToast();
 
   const table = useReactTable({
@@ -224,6 +85,10 @@ export function DataTable<TData, TValue>({
         });
       }
     });
+  };
+
+  const handleOnRowClick = (id: number) => {
+    router.push(`positions/${id.toString()}`);
   };
 
   return (
@@ -273,6 +138,10 @@ export function DataTable<TData, TValue>({
                   className="cursor-pointer"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  onClick={() => {
+                    const item = row.original as Position;
+                    handleOnRowClick(item.id);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -317,25 +186,4 @@ export function DataTable<TData, TValue>({
       </div>
     </div>
   );
-}
-
-export type Position = {
-  company: string;
-  contact: string;
-  createdAt: string;
-  description: string;
-  hourlyRate: number;
-  id: number;
-  jobTitle: string;
-  location: string;
-  positionUrl: string;
-  status: PositionStatus;
-};
-
-interface PositionsTableProp {
-  positions: Position[];
-}
-
-export function PositionsTable({ positions }: PositionsTableProp) {
-  return <DataTable columns={columns} data={positions}></DataTable>;
 }

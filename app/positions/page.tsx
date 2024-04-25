@@ -1,4 +1,5 @@
-import { Position, PositionsTable } from "@/components/PositionsTable";
+import { PositionsTable } from "@/components/PositionsTable/PositionsTable";
+import { Position } from "@/types/common";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 
