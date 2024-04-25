@@ -10,6 +10,7 @@ import {
 import {
   ColumnDef,
   ColumnFiltersState,
+  RowSelectionState,
   SortingState,
   VisibilityState,
   createColumnHelper,
@@ -43,10 +44,34 @@ import {
 } from "@/components/ui/table";
 import { Database } from "@/types/supabase";
 import { parseISO, format } from "date-fns";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MinusIcon, MoreHorizontal } from "lucide-react";
 import { AddPositionDialog } from "./AddPositionDialog/AddPositionDialog";
+import Link from "next/link";
+import { onDeleteAction } from "@/actions/deletePosition";
 
 export const columns: ColumnDef<Position>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
   {
     accessorKey: "createdAt",
     header: "Datum",
@@ -79,6 +104,18 @@ export const columns: ColumnDef<Position>[] = [
   {
     accessorKey: "description",
     header: "Description",
+  },
+  {
+    accessorKey: "positionUrl",
+    header: "Position url",
+    cell: ({ row }) => {
+      const link = row.getValue("positionUrl");
+      return (
+        <Link href={row.getValue("positionUrl")} target="_blank">
+          link
+        </Link>
+      );
+    },
   },
   {
     accessorKey: "hourlyRate",
@@ -154,6 +191,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [filterValue, setFilterValue] = React.useState<string>("");
+  const [isPending, startTransition] = React.useTransition();
+  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
   const table = useReactTable({
     data,
@@ -163,8 +202,10 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
     state: {
       sorting,
+      rowSelection,
     },
   });
 
@@ -173,21 +214,40 @@ export function DataTable<TData, TValue>({
     table.setGlobalFilter(value);
   };
 
-  const handleRowClick = (rowData: Position) => {
-    if (rowData.positionUrl) {
-      window.open(rowData.positionUrl, "_blank");
-    }
+  const selectedRow = table.getFilteredSelectedRowModel().rows;
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      const selectedRows = table.getSelectedRowModel();
+      const rowIds: number[] = selectedRows.rows.map((row) => {
+        const item = row.original as Position;
+        return item.id;
+      });
+      const response = await onDeleteAction(rowIds);
+
+      if (response.message === "success") {
+        setRowSelection({});
+      }
+    });
   };
 
   return (
     <div>
       <div className="flex items-center py-4 justify-between">
-        <Input
-          placeholder="Search..."
-          value={filterValue}
-          onChange={(event) => applyFilter(event.target.value)}
-          className="max-w-sm"
-        />
+        <div className="flex items-center justify-between">
+          <Input
+            placeholder="Search..."
+            value={filterValue}
+            onChange={(event) => applyFilter(event.target.value)}
+            className="max-w-sm mr-2"
+          />
+
+          {selectedRow.length > 0 && (
+            <Button variant="outline" size="sm" onClick={handleDelete}>
+              <MinusIcon className="mr-2" /> Delete
+            </Button>
+          )}
+        </div>
 
         <AddPositionDialog />
       </div>
@@ -218,7 +278,6 @@ export function DataTable<TData, TValue>({
                   className="cursor-pointer"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => handleRowClick(row.original as Position)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

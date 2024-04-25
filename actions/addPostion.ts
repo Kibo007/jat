@@ -1,6 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { schema } from "./formSchema";
+import { schema } from "../components/AddPositionDialog/formSchema";
 import { revalidatePath } from "next/cache";
 
 export type FormState = {

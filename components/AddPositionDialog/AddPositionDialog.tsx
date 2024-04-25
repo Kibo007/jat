@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
 
 import { schema } from "./formSchema";
 
-import { onSubmitAction } from "./formSubmit";
+import { onSubmitAction } from "../../actions/addPostion";
 import { Textarea } from "../ui/textarea";
 import { SubmitButton } from "./SubmitButton";
 
