@@ -1,4 +1,5 @@
 "use server";
+import { PositionStatus } from "@/types/common";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -6,17 +7,16 @@ export type Response = {
   message: string;
 };
 
-export async function onDeleteAction(ids: number[]): Promise<Response> {
+export async function onUpdateStatus(
+  id: number,
+  status: PositionStatus
+): Promise<Response> {
   const supabase = createClient();
-  const user = await supabase.auth.getUser();
 
-  if (!user.data.user?.id) {
-    return {
-      message: "User is not authentificated with server",
-    };
-  }
-
-  let { error } = await supabase.from("positions").delete().in("id", ids);
+  let { error } = await supabase
+    .from("positions")
+    .update({ status })
+    .eq("id", id);
 
   if (error) {
     return {

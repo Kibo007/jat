@@ -1,19 +1,11 @@
 "use client";
 
 import * as React from "react";
-import {
-  CaretSortIcon,
-  ChevronDownIcon,
-  DotsHorizontalIcon,
-  PlusIcon,
-} from "@radix-ui/react-icons";
+
 import {
   ColumnDef,
-  ColumnFiltersState,
   RowSelectionState,
   SortingState,
-  VisibilityState,
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
@@ -24,15 +16,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -42,13 +25,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Database } from "@/types/supabase";
 import { parseISO, format } from "date-fns";
-import { ArrowUpDown, MinusIcon, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MinusIcon } from "lucide-react";
 import { AddPositionDialog } from "./AddPositionDialog/AddPositionDialog";
 import Link from "next/link";
 import { onDeleteAction } from "@/actions/deletePosition";
 import { useToast } from "./ui/use-toast";
+import { PositionStatus } from "@/types/common";
+import { onUpdateStatus } from "@/actions/updatePosition";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
+import { POSITION_STATUS } from "@/utils/supabase/constants";
 
 export const columns: ColumnDef<Position>[] = [
   {
@@ -150,31 +143,27 @@ export const columns: ColumnDef<Position>[] = [
 
       return (
         <div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost">
-                <span className="sr-only">Open menu</span>
-                {row.getValue("status")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Set status of application</DropdownMenuLabel>
-              {["applied", "interview", "offer", "rejected", "panding"].map(
-                (status) => {
+          <Select
+            defaultValue={position.status}
+            onValueChange={(status) => {
+              onUpdateStatus(position.id, status as PositionStatus);
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select postion status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {POSITION_STATUS.map((status) => {
                   return (
-                    <DropdownMenuItem
-                      key={status}
-                      onClick={() =>
-                        navigator.clipboard.writeText(position.company)
-                      }
-                    >
+                    <SelectItem key={status} value={status}>
                       {status}
-                    </DropdownMenuItem>
+                    </SelectItem>
                   );
-                }
-              )}
-            </DropdownMenuContent>
-          </DropdownMenu>
+                })}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
       );
     },
@@ -340,7 +329,7 @@ export type Position = {
   jobTitle: string;
   location: string;
   positionUrl: string;
-  status: "applied" | "interview" | "offer" | "rejected" | "panding";
+  status: PositionStatus;
 };
 
 interface PositionsTableProp {

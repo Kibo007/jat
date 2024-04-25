@@ -45,7 +45,7 @@ export async function onSubmitAction(
     };
   }
 
-  let { data: dataSupabase, error } = await supabase
+  let { error } = await supabase
     .from("positions")
     .insert([
       {
