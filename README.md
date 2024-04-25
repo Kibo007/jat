@@ -1,3 +1,7 @@
+# JAT - Job Application Tracker
+
+This applicaiton use nextjs 14, tailwind, shadcn and supabase.
+
 ## Features
 
 - Works across the entire [Next.js](https://nextjs.org) stack
