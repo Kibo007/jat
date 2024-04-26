@@ -94,7 +94,6 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
     accessorKey: "positionUrl",
     header: "Position url",
     cell: ({ row }) => {
-      const link = row.getValue("positionUrl");
       return (
         <Link href={row.getValue("positionUrl")} target="_blank">
           link
