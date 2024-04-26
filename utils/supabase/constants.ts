@@ -5,5 +5,5 @@ export const POSITION_STATUS: PositionStatus[] = [
   "interview",
   "offer",
   "rejected",
-  "panding",
+  "pending",
 ];

@@ -3,8 +3,8 @@ export type PositionStatus =
   | "interview"
   | "offer"
   | "rejected"
-  | "panding";
-  
+  | "pending";
+
   export type Position = {
     company: string;
     contact: string;

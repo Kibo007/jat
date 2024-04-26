@@ -1,6 +1,6 @@
 "use server";
 import { createClient } from "@/utils/supabase/server";
-import { schema } from "../components/AddPositionDialog/formSchema";
+import { schema } from "../components/PositionForm/formSchema";
 import { revalidatePath } from "next/cache";
 
 export type FormState = {
@@ -11,12 +11,12 @@ export type FormState = {
 
 export async function onSubmitAction(
   prevState: FormState,
-  data: FormData
+  data: FormData,
+  positionId?: number
 ): Promise<FormState> {
   const formData = Object.fromEntries(data);
   const parsed = schema.safeParse(formData);
-  console.log(prevState);
-  console.log(data);
+
   if (!parsed.success) {
     const fields: Record<string, string> = {};
     for (const key of Object.keys(formData)) {
@@ -29,13 +29,6 @@ export async function onSubmitAction(
     };
   }
 
-  //   if (parsed.data.email.includes("a")) {
-  //     return {
-  //       message: "Invalid email",
-  //       fields: parsed.data,
-  //     };
-  //   }
-
   const supabase = createClient();
   const user = await supabase.auth.getUser();
 
@@ -45,31 +38,38 @@ export async function onSubmitAction(
     };
   }
 
-  let { error } = await supabase
-    .from("positions")
-    .insert([
-      {
-        company: String(data.get("company")) || null,
-        contact: String(data.get("contact")) || null,
-        description: String(data.get("description")) || null,
-        hourly_rate: Number(data.get("hourlyRate")) || null,
-        job_title: String(data.get("jobTitle")) || null,
-        location: String(data.get("location")) || null,
-        position_url: String(data.get("positionUrl")) || null,
-        status: String(data.get("status")) || null,
-        user_id: user.data.user?.id,
-      },
-    ])
-    .select();
+  const payload = {
+    company: String(data.get("company")) || null,
+    contact: String(data.get("contact")) || null,
+    description: String(data.get("description")) || null,
+    hourly_rate: Number(data.get("hourlyRate")) || null,
+    job_title: String(data.get("jobTitle")) || null,
+    location: String(data.get("location")) || null,
+    position_url: String(data.get("positionUrl")) || null,
+    status: String(data.get("status")) || null,
+    user_id: user.data.user?.id,
+  };
 
-  if (error) {
-    console.log(error);
+  let response
+
+  if (positionId) {
+    response = await supabase
+      .from("positions")
+      .update(payload)
+      .eq("id", positionId);
+      
+  } else {
+    response = await supabase.from("positions").insert([payload]).select();
+  }
+
+  if (response.error) {
+    console.log(response.error);
     return {
-      message: error.toString(),
+      message: response.error.toString(),
     };
   }
 
-  if (!error) {
+  if (!response.error) {
     revalidatePath("/positions");
   }
 

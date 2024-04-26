@@ -8,7 +8,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, SquarePenIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -30,29 +30,38 @@ import { Input } from "@/components/ui/input";
 
 import { schema } from "./formSchema";
 
-import { onSubmitAction } from "../../actions/addPostion";
+import { FormState, onSubmitAction } from "../../actions/formPosition";
 import { Textarea } from "../ui/textarea";
 import { SubmitButton } from "./SubmitButton";
 import { useToast } from "../ui/use-toast";
+import { Position } from "@/types/common";
 
-export function AddPositionDialog() {
+interface PositionForm {
+  position?: Position;
+}
+
+export function PositionForm({ position }: PositionForm) {
   const [open, setOpen] = useState(false);
-  const [state, formAction] = useFormState(onSubmitAction, {
-    message: "",
-  });
+  const [state, formAction] = useFormState(
+    (prevState: FormState, data: FormData) =>
+      onSubmitAction(prevState, data, position?.id),
+    {
+      message: "",
+    }
+  );
 
   const { toast } = useToast();
 
   const form = useForm<z.output<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      company: "",
-      jobTitle: "",
-      contact: "",
-      location: "",
-      description: "",
-      hourlyRate: 100,
-      status: "applied",
+      company: position?.company || "",
+      jobTitle: position?.jobTitle || "",
+      contact: position?.contact || "",
+      location: position?.location || "",
+      description: position?.description || "",
+      hourlyRate: position?.hourlyRate || 100,
+      status: position?.status || "applied",
       ...(state?.fields ?? {}),
     },
   });
@@ -73,12 +82,18 @@ export function AddPositionDialog() {
     <Dialog open={open} onOpenChange={(state) => setOpen(state)}>
       <DialogTrigger asChild>
         <Button
-          variant="outline"
+          variant={position ? "ghost" : "outline"}
           size="sm"
           onClick={() => setOpen(true)}
           className="ml-2"
         >
-          <PlusIcon className="mr-2" /> Add
+          {position ? (
+            <SquarePenIcon />
+          ) : (
+            <>
+              <PlusIcon className="mr-2" /> Add
+            </>
+          )}
         </Button>
       </DialogTrigger>
       <DialogContent className="lg:max-w-screen-lg h-[100vh] sm:h-[80vh]">

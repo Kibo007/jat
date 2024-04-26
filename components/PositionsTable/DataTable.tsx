@@ -25,7 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { ChevronDownIcon, MinusIcon } from "lucide-react";
-import { AddPositionDialog } from "../AddPositionDialog/AddPositionDialog";
+import { PositionForm } from "../PositionForm/PositionForm";
 import { onDeleteAction } from "@/actions/deletePosition";
 import { useToast } from "../ui/use-toast";
 import { Position } from "@/types/common";
@@ -166,7 +166,7 @@ export function DataTable<TData, TValue>({
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
-          <AddPositionDialog />
+          <PositionForm />
         </div>
       </div>
       <div className="rounded-md border">
