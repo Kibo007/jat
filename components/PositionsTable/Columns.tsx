@@ -123,7 +123,7 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
         currency: "EUR",
       }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <div className="text-center font-medium">{formatted}</div>;
     },
   },
   {

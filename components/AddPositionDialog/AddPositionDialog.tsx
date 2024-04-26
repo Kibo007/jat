@@ -64,13 +64,14 @@ export function AddPositionDialog() {
       toast({
         title: `Position successfuly added`,
       });
+      form.reset();
     }
-  }, [state?.message, toast]);
+  }, [state?.message, toast, form]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <Dialog open={open}>
+    <Dialog open={open} onOpenChange={(state) => setOpen(state)}>
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -81,7 +82,7 @@ export function AddPositionDialog() {
           <PlusIcon className="mr-2" /> Add
         </Button>
       </DialogTrigger>
-      <DialogContent className="lg:max-w-screen-lg max-h-[80vh]">
+      <DialogContent className="lg:max-w-screen-lg h-[100vh] sm:h-[80vh]">
         <DialogHeader>
           <DialogTitle>Job application form</DialogTitle>
           <DialogDescription>
@@ -91,9 +92,11 @@ export function AddPositionDialog() {
         <div className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
             <Form {...form}>
-              {state?.message !== "" && !state.issues && (
-                <div className="text-red-500">{state.message}</div>
-              )}
+              {state?.message !== "" &&
+                !state.issues &&
+                form.formState.isDirty && (
+                  <div className="text-red-500">{state.message}</div>
+                )}
               {state?.issues && (
                 <div className="text-red-500">
                   <ul>

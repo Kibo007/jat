@@ -20,5 +20,9 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   if (!data) return null;
 
-  return <div className="mt-20">Details page {data[0].company}</div>;
+  return (
+    <div className="mt-20 flex justify-center align-middle">
+      Details page for company {data[0].company} comming soon! Stay tuned
+    </div>
+  );
 }
