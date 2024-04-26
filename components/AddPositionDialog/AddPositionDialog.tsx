@@ -72,7 +72,12 @@ export function AddPositionDialog() {
   return (
     <Dialog open={open}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setOpen(true)}
+          className="ml-2"
+        >
           <PlusIcon className="mr-2" /> Add
         </Button>
       </DialogTrigger>

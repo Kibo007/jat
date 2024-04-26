@@ -28,9 +28,7 @@ export default function RootLayout({
           </div>
         </nav>
 
-        <main className="min-h-screen flex flex-col items-center">
-          {children}
-        </main>
+        <main>{children}</main>
         <Toaster />
       </body>
     </html>

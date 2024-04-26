@@ -24,12 +24,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { MinusIcon } from "lucide-react";
+import { ChevronDownIcon, MinusIcon } from "lucide-react";
 import { AddPositionDialog } from "../AddPositionDialog/AddPositionDialog";
 import { onDeleteAction } from "@/actions/deletePosition";
 import { useToast } from "../ui/use-toast";
 import { Position } from "@/types/common";
 import { useRouter } from "next/navigation";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import useIsMobile from "@/hooks/useIsMobile";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,6 +53,7 @@ export function DataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const router = useRouter();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const table = useReactTable({
     data,
@@ -91,6 +99,28 @@ export function DataTable<TData, TValue>({
     router.push(`positions/${id.toString()}`);
   };
 
+  React.useEffect(() => {
+    if (isMobile) {
+      table
+        .getAllColumns()
+        .filter((column) => column.getCanHide())
+        .map((column) => {
+          if (!["jobTitle", "status"].includes(column.id)) {
+            column.toggleVisibility(false);
+          }
+        });
+    } else {
+      table
+        .getAllColumns()
+        .filter((column) => column.getCanHide())
+        .map((column) => {
+          if (!column.getIsVisible()) {
+            column.toggleVisibility(true);
+          }
+        });
+    }
+  }, [isMobile, table]);
+
   return (
     <div>
       <div className="flex items-center py-4 justify-between">
@@ -109,7 +139,35 @@ export function DataTable<TData, TValue>({
           )}
         </div>
 
-        <AddPositionDialog />
+        <div className="flex items-center justify-between">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDownIcon className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <AddPositionDialog />
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>

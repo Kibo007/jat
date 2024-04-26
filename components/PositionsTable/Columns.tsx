@@ -21,7 +21,7 @@ import {
 } from "../ui/select";
 import { POSITION_STATUS } from "@/utils/supabase/constants";
 
-export const Columns: ColumnDef<Position>[] = [
+export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
   {
     id: "select",
     header: ({ table }) => (
@@ -45,7 +45,7 @@ export const Columns: ColumnDef<Position>[] = [
       />
     ),
     enableSorting: false,
-    enableHiding: false,
+    enableHiding: true,
   },
   {
     accessorKey: "createdAt",
@@ -67,6 +67,16 @@ export const Columns: ColumnDef<Position>[] = [
   {
     accessorKey: "jobTitle",
     header: "Job Title",
+    cell: ({ row }) => {
+      return (
+        <p className="flex flex-col">
+          <span>{row.getValue("jobTitle")}</span>
+          {isMobile && (
+            <span className="text-slate-600">{row.getValue("company")}</span>
+          )}
+        </p>
+      );
+    },
   },
   {
     accessorKey: "contact",
