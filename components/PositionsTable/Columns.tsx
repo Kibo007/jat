@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { POSITION_STATUS } from "@/utils/supabase/constants";
+import { SelectStatus } from "./SelectStatus";
 
 export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
   {
@@ -133,27 +134,7 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
 
       return (
         <div>
-          <Select
-            defaultValue={position.status}
-            onValueChange={(status) => {
-              onUpdateStatus(position.id, status as PositionStatus);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select postion status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                {POSITION_STATUS.map((status) => {
-                  return (
-                    <SelectItem key={status} value={status}>
-                      {status}
-                    </SelectItem>
-                  );
-                })}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+          <SelectStatus id={position.id} status={position.status} />
         </div>
       );
     },
