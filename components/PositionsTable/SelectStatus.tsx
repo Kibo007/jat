@@ -32,7 +32,7 @@ export const SelectStatus = ({ status, id }: SelectStatusProps) => {
       }}
     >
       <SelectTrigger
-        className="w-[180px]"
+        className="w-[120px]"
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();

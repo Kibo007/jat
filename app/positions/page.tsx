@@ -30,7 +30,7 @@ export default async function Page() {
   }));
 
   return (
-    <div className="m-4 md:m-10 mt-20">
+    <div className="m-4 md:m-10 md:mt-20">
       <PositionsTable positions={positions as Position[]} />
     </div>
   );
