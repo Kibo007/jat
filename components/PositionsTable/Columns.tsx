@@ -9,17 +9,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { parseISO, format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
-import { Position, PositionStatus } from "@/types/common";
-import { onUpdateStatus } from "@/actions/updatePosition";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { POSITION_STATUS } from "@/utils/supabase/constants";
+import { Position } from "@/types/common";
 import { SelectStatus } from "./SelectStatus";
 
 export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
@@ -132,11 +122,7 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
     cell: ({ row }) => {
       const position = row.original;
 
-      return (
-        <div>
-          <SelectStatus id={position.id} status={position.status} />
-        </div>
-      );
+      return <SelectStatus id={position.id} status={position.status} />;
     },
   },
 ];
