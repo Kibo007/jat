@@ -7,15 +7,20 @@ export type Response = {
   message: string;
 };
 
-export async function onUpdateStatus(
+type PositionUpdatePayload = {
+  status?: PositionStatus;
+  excitement?: number;
+};
+
+export async function onUpdatePosition(
   id: number,
-  status: PositionStatus
+  payload: PositionUpdatePayload
 ): Promise<Response> {
   const supabase = createClient();
 
   let { error } = await supabase
     .from("positions")
-    .update({ status })
+    .update(payload)
     .eq("id", id);
 
   if (error) {

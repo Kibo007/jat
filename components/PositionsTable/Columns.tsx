@@ -11,6 +11,7 @@ import { ArrowUpDown } from "lucide-react";
 import Link from "next/link";
 import { Position } from "@/types/common";
 import { SelectStatus } from "./SelectStatus";
+import { ExcitementRatings } from "../ExcitementRatings";
 
 export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
   {
@@ -123,6 +124,17 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
       const position = row.original;
 
       return <SelectStatus id={position.id} status={position.status} />;
+    },
+  },
+  {
+    accessorKey: "excitement",
+    header: "Excitement",
+    cell: ({ row }) => {
+      const position = row.original;
+
+      return (
+        <ExcitementRatings rating={position.excitement} id={position.id} />
+      );
     },
   },
 ];

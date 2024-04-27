@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import { PositionStatus } from "@/types/common";
-import { onUpdateStatus } from "@/actions/updatePosition";
+import { onUpdatePosition } from "@/actions/updatePosition";
 import {
   Select,
   SelectContent,
@@ -28,7 +28,7 @@ export const SelectStatus = ({ status, id }: SelectStatusProps) => {
       onOpenChange={setIsOpen}
       defaultValue={status}
       onValueChange={(status) => {
-        onUpdateStatus(id, status as PositionStatus);
+        onUpdatePosition(id, { status: status as PositionStatus });
       }}
     >
       <SelectTrigger

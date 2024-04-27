@@ -27,6 +27,7 @@ export default async function Page() {
     location: position.location,
     positionUrl: position.position_url,
     status: position.status,
+    excitement: position.excitement,
   }));
 
   return (

@@ -15,6 +15,7 @@ export type Database = {
           contact: string | null
           created_at: string
           description: string | null
+          excitement: number | null
           hourly_rate: number | null
           id: number
           job_title: string | null
@@ -28,6 +29,7 @@ export type Database = {
           contact?: string | null
           created_at?: string
           description?: string | null
+          excitement?: number | null
           hourly_rate?: number | null
           id?: number
           job_title?: string | null
@@ -41,6 +43,7 @@ export type Database = {
           contact?: string | null
           created_at?: string
           description?: string | null
+          excitement?: number | null
           hourly_rate?: number | null
           id?: number
           job_title?: string | null

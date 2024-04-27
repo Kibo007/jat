@@ -16,4 +16,5 @@ export type PositionStatus =
     location: string;
     positionUrl: string;
     status: PositionStatus;
+    excitement: number;
   };
