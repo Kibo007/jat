@@ -14,7 +14,10 @@ export default async function Page() {
     return redirect("/login");
   }
 
-  const { data } = await supabase.from("positions").select();
+  const { data } = await supabase
+    .from("positions")
+    .select()
+    .order("id", { ascending: false });
 
   const positions = data?.map((position) => ({
     company: position.company,

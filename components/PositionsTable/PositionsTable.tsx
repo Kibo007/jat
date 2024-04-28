@@ -10,5 +10,6 @@ interface PositionsTableProp {
 
 export function PositionsTable({ positions }: PositionsTableProp) {
   const isMobile = useIsMobile();
+  console.log(positions);
   return <DataTable columns={Columns(isMobile)} data={positions}></DataTable>;
 }
