@@ -96,7 +96,7 @@ export function PositionForm({ position }: PositionForm) {
           )}
         </Button>
       </DialogTrigger>
-      <DialogContent className="lg:max-w-screen-lg h-[100vh] sm:h-[80vh]">
+      <DialogContent className="lg:max-w-screen-lg h-[97vh] sm:h-[80vh]">
         <DialogHeader>
           <DialogTitle>Job application form</DialogTitle>
           <DialogDescription>
