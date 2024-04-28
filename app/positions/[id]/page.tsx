@@ -5,6 +5,7 @@ import { parseISO, formatDistance, subDays } from "date-fns";
 import Link from "next/link";
 import { PositionForm } from "@/components/PositionForm/PositionForm";
 import { Position } from "@/types/common";
+import { ExcitementRatings } from "@/components/ExcitementRatings";
 
 export default async function Page({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -21,7 +22,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   if (!data) return null;
 
-  const position = data?.find(
+  const position = data.find(
     (position) => position.id.toString() === params.id
   );
   const createdAt = parseFloat(position?.created_at || "");
@@ -72,22 +73,30 @@ export default async function Page({ params }: { params: { id: string } }) {
               )}
             </p>
           </div>
-          <PositionForm
-            position={
-              {
-                company: position?.company,
-                contact: position?.contact,
-                createdAt: position?.created_at,
-                description: position?.description,
-                hourlyRate: position?.hourly_rate,
-                id: position?.id,
-                jobTitle: position?.job_title,
-                location: position?.location,
-                positionUrl: position?.position_url,
-                status: position?.status,
-              } as Position
-            }
-          />
+          <div className="flex flex-col justify-between items-end">
+            <PositionForm
+              position={
+                {
+                  company: position?.company,
+                  contact: position?.contact,
+                  createdAt: position?.created_at,
+                  description: position?.description,
+                  hourlyRate: position?.hourly_rate,
+                  id: position?.id,
+                  jobTitle: position?.job_title,
+                  location: position?.location,
+                  positionUrl: position?.position_url,
+                  status: position?.status,
+                } as Position
+              }
+            />
+            {position && (
+              <ExcitementRatings
+                rating={position.excitement || 0}
+                id={position.id}
+              />
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-8">
