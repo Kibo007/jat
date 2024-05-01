@@ -18,11 +18,11 @@ export async function onDeleteAction(ids: number[]): Promise<Response> {
 
   let { error } = await supabase.from("positions").delete().in("id", ids);
 
-  if (error) {
-    return {
-      message: error.toString(),
-    };
-  }
+if (error) {
+  return {
+    message: JSON.stringify(error),
+  };
+}
 
   if (!error) {
     revalidatePath("/positions");

@@ -4,7 +4,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -39,15 +40,22 @@
     "zod": "^3.23.4"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "14.1.2",
     "@types/lodash": "^4.17.0",
     "@types/node": "20.11.5",
     "@types/react": "18.2.48",
     "@types/react-dom": "18.2.18",
     "@types/ua-parser-js": "^0.7.39",
+    "@vitejs/plugin-react": "^4.2.1",
     "encoding": "^0.1.13",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.2",
     "eslint-config-prettier": "^9.1.0",
-    "supabase": "^1.163.2"
+    "jest-dom": "^4.0.0",
+    "jsdom": "^23.0.1",
+    "supabase": "^1.163.2",
+    "typescript": "5.3.3",
+    "vitest": "1.0.4"
   }
 }
