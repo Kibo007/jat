@@ -16,6 +16,7 @@ export async function onSubmitAction(
 ): Promise<FormState> {
   const formData = Object.fromEntries(data);
   const parsed = schema.safeParse(formData);
+  console.log(parsed);
 
   if (!parsed.success) {
     const fields: Record<string, string> = {};
