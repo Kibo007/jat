@@ -5,7 +5,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -48,6 +49,7 @@
     "@types/react-dom": "18.2.18",
     "@types/ua-parser-js": "^0.7.39",
     "@vitejs/plugin-react": "^4.2.1",
+    "@vitest/coverage-v8": "^1.6.0",
     "encoding": "^0.1.13",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.2",
@@ -56,6 +58,6 @@
     "jsdom": "^23.0.1",
     "supabase": "^1.163.2",
     "typescript": "5.3.3",
-    "vitest": "1.0.4"
+    "vitest": "1.6.0"
   }
 }
