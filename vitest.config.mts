@@ -10,6 +10,9 @@ export default defineConfig({
     globals: true,
     css: true,
     setupFiles: "testSetup.ts",
+    coverage: {
+      provider: "v8", // or 'v8'
+    },
   },
   resolve: {
     alias: {

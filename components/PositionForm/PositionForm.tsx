@@ -82,6 +82,7 @@ export function PositionForm({ position }: PositionForm) {
     <Dialog open={open} onOpenChange={(state) => setOpen(state)}>
       <DialogTrigger asChild>
         <Button
+          data-testid="positionDialogButton"
           variant={position ? "ghost" : "outline"}
           size="sm"
           onClick={() => setOpen(true)}

@@ -44,6 +44,7 @@ describe("onSubmitAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
+
   it("should return 'Invalid form data' message and fields with issues if form data is invalid", async () => {
     const prevState: FormState = { message: "" };
     const data = new FormData();

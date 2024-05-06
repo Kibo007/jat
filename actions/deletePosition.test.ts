@@ -75,7 +75,7 @@ describe("onDeleteAction", () => {
     };
     const ids = [1, 2, 3];
     const response: Response = await onDeleteAction(ids);
-    console.log(response.message, "response.message");
+
     expect(JSON.parse(response.message)).toStrictEqual({
       message: "Delete operation failed",
     });

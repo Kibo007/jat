@@ -22,7 +22,7 @@ export async function onUpdatePosition(
     .from("positions")
     .update(payload)
     .eq("id", id);
-console.log("error");
+
 if (error) {
   return {
     message: JSON.stringify(error),
