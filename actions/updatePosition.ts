@@ -22,12 +22,12 @@ export async function onUpdatePosition(
     .from("positions")
     .update(payload)
     .eq("id", id);
-
-  if (error) {
-    return {
-      message: error.toString(),
-    };
-  }
+console.log("error");
+if (error) {
+  return {
+    message: JSON.stringify(error),
+  };
+}
 
   if (!error) {
     revalidatePath("/positions");

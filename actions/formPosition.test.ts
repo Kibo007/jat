@@ -1,5 +1,4 @@
 import { onSubmitAction, FormState } from "./formPosition";
-import { revalidatePath } from "next/cache";
 
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),

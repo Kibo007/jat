@@ -64,7 +64,6 @@ export async function onSubmitAction(
   }
 
   if (response.error) {
-    console.log(response.error);
     return {
       message: response.error.toString(),
     };
