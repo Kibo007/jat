@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import { SubmitButton } from "./submit-button";
+import { GoogleAuthButton } from "./google-button";
 
 export default function Login({
   searchParams,
@@ -114,6 +115,9 @@ export default function Login({
               {searchParams.message}
             </p>
           )}
+
+          <hr className="my-12 h-px border-t-0 bg-transparent bg-gradient-to-r from-transparent via-neutral-500 to-transparent opacity-25 dark:via-neutral-400" />
+          <GoogleAuthButton />
         </form>
       </div>
     </div>
