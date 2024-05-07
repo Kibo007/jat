@@ -73,13 +73,18 @@ export function PositionForm({ position }: PositionForm) {
         title: `Position successfuly added`,
       });
       form.reset();
+      state.message = "";
     }
-  }, [state?.message, toast, form]);
+  }, [state, state?.message, toast, form]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
-    <Dialog open={open} onOpenChange={(state) => setOpen(state)}>
+    <Dialog
+      open={open}
+      key={`isOpen${open}`}
+      onOpenChange={(state) => setOpen(state)}
+    >
       <DialogTrigger asChild>
         <Button
           data-testid="positionDialogButton"

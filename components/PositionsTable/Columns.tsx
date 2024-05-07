@@ -18,6 +18,7 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
     id: "select",
     header: ({ table }) => (
       <Checkbox
+        data-testid="selectAll"
         checked={
           table.getIsAllPageRowsSelected() ||
           (table.getIsSomePageRowsSelected() && "indeterminate")
@@ -28,6 +29,7 @@ export const Columns = (isMobile: boolean): ColumnDef<Position>[] => [
     ),
     cell: ({ row }) => (
       <Checkbox
+        data-testid={`select${row.getValue("company")}`}
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
